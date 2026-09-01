@@ -1,0 +1,98 @@
+class CircularQueue {
+    private int[] queue;
+    private int front;
+    private int rear;
+    private int size;
+
+    CircularQueue(int capacity) {
+        queue = new int[capacity];
+        front = -1;
+        rear = -1;
+        size = capacity;
+    }
+
+    // Add a print job
+    void enqueue(int job) {
+        if ((rear + 1) % size == front) {
+            System.out.println("Queue Overflow - Queue is Full");
+            return;
+        }
+
+        if (front == -1) {
+            front = 0;
+            rear = 0;
+        } else {
+            rear = (rear + 1) % size;
+        }
+
+        queue[rear] = job;
+        System.out.println("Print job " + job + " added.");
+    }
+
+    // Remove a completed print job
+    void dequeue() {
+        if (front == -1) {
+            System.out.println("Queue Underflow - Queue is Empty");
+            return;
+        }
+
+        System.out.println("Print job " + queue[front] + " completed.");
+
+        if (front == rear) {
+            front = -1;
+            rear = -1;
+        } else {
+            front = (front + 1) % size;
+        }
+    }
+
+    // Display all print jobs
+    void display() {
+        if (front == -1) {
+            System.out.println("Queue is Empty");
+            return;
+        }
+
+        System.out.print("Print Queue: ");
+
+        int i = front;
+        while (true) {
+            System.out.print(queue[i] + " ");
+
+            if (i == rear)
+                break;
+
+            i = (i + 1) % size;
+        }
+
+        System.out.println();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        CircularQueue printer = new CircularQueue(5);
+
+        printer.enqueue(101);
+        printer.enqueue(102);
+        printer.enqueue(103);
+        printer.enqueue(104);
+
+        printer.display();
+
+        // Completed jobs
+        printer.dequeue();
+        printer.dequeue();
+
+        printer.display();
+
+        // Vacant positions are reused
+        printer.enqueue(105);
+        printer.enqueue(106);
+
+        printer.display();
+
+        printer.enqueue(107);
+    }
+}

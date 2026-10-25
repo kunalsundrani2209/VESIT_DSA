@@ -1,0 +1,133 @@
+import java.util.Scanner;
+
+class Node {
+    int rollNo;
+    Node left, right;
+
+    Node(int rollNo) {
+        this.rollNo = rollNo;
+        left = right = null;
+    }
+}
+
+public class BST {
+    static Node root = null;
+    static Scanner sc = new Scanner(System.in);
+
+    static Node insert(Node root, int roll) {
+        if (root == null)
+            return new Node(roll);
+
+        if (roll < root.rollNo)
+            root.left = insert(root.left, roll);
+        else if (roll > root.rollNo)
+            root.right = insert(root.right, roll);
+
+        return root;
+    }
+
+    static boolean search(Node root, int roll) {
+        if (root == null)
+            return false;
+
+        if (root.rollNo == roll)
+            return true;
+
+        if (roll < root.rollNo)
+            return search(root.left, roll);
+
+        return search(root.right, roll);
+    }
+
+    static Node delete(Node root, int roll) {
+        if (root == null)
+            return null;
+
+        if (roll < root.rollNo)
+            root.left = delete(root.left, roll);
+        else if (roll > root.rollNo)
+            root.right = delete(root.right, roll);
+        else {
+            if (root.left == null)
+                return root.right;
+
+            if (root.right == null)
+                return root.left;
+
+            Node temp = root.right;
+            while (temp.left != null)
+                temp = temp.left;
+
+            root.rollNo = temp.rollNo;
+            root.right = delete(root.right, temp.rollNo);
+        }
+
+        return root;
+    }
+
+    static void inorder(Node root) {
+        if (root != null) {
+            inorder(root.left);
+            System.out.print(root.rollNo + " ");
+            inorder(root.right);
+        }
+    }
+
+    public static void main(String[] args) {
+        int choice, roll;
+
+        do {
+            System.out.println("\n1. Insert");
+            System.out.println("2. Search");
+            System.out.println("3. Delete");
+            System.out.println("4. Display (Inorder)");
+            System.out.println("5. Exit");
+            System.out.print("Enter Choice: ");
+            choice = Integer.parseInt(sc.nextLine());
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter Roll Number: ");
+                    roll = Integer.parseInt(sc.nextLine());
+                    root = insert(root, roll);
+                    System.out.println("Roll Number Inserted!");
+                    break;
+
+                case 2:
+                    System.out.print("Enter Roll Number to Search: ");
+                    roll = Integer.parseInt(sc.nextLine());
+                    if (search(root, roll))
+                        System.out.println("Roll Number Found!");
+                    else
+                        System.out.println("Roll Number Not Found!");
+                    break;
+
+                case 3:
+                    System.out.print("Enter Roll Number to Delete: ");
+                    roll = Integer.parseInt(sc.nextLine());
+                    if (search(root, roll)) {
+                        root = delete(root, roll);
+                        System.out.println("Roll Number Deleted!");
+                    } else {
+                        System.out.println("Roll Number Not Found!");
+                    }
+                    break;
+
+                case 4:
+                    System.out.print("Roll Numbers: ");
+                    inorder(root);
+                    System.out.println();
+                    break;
+
+                case 5:
+                    System.out.println("Exit");
+                    break;
+
+                default:
+                    System.out.println("Invalid Choice!");
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
